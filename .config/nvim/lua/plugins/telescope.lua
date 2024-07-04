@@ -1,8 +1,7 @@
 local function fzf_build_cmd()
     if vim.fn.executable("cmake") == 1 then
         return "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && \z
-            cmake --build build --config Release && \z
-            cmake --install build prefix build"
+            cmake --build build --config Release"
     elseif vim.fn.executable("make") == 1 then
         return "make"
     else
