@@ -120,3 +120,13 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+if [ -d "$HOME/.local/share/nvm" ]; then
+       export NVM_DIR="$HOME/.local/share/nvm"
+       [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+       [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+fi
+
+if [ -f /run/.containerenv ] && [ -f /run/.toolboxenv ]; then
+    export CONTAINER_HOST="unix://run/user/$UID/podman/podman.sock"
+fi
