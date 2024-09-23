@@ -15,10 +15,55 @@ local function twrap(command, opts)
     end
 end
 
+local function get_kind_filter()
+    local buf = vim.api.nvim_get_current_buf()
+    local ft = vim.bo[buf].filetype
+    local kind_filter = {
+        default = {
+            "Class",
+            "Constructor",
+            "Enum",
+            "Field",
+            "Function",
+            "Interface",
+            "Method",
+            "Module",
+            "Namespace",
+            "Package",
+            "Property",
+            "Struct",
+            "Trait",
+        },
+        markdown = false,
+        help = false,
+        lua = {
+            "Class",
+            "Constructor",
+            "Enum",
+            "Field",
+            "Function",
+            "Interface",
+            "Method",
+            "Module",
+            "Namespace",
+            "Property",
+            "Struct",
+            "Trait",
+        },
+    }
+    if kind_filter[ft] == false then
+        return
+    end
+    if type(kind_filter[ft]) == "table" then
+        return kind_filter[ft]
+    end
+    return kind_filter.default
+end
+
 return {
     {
         "nvim-telescope/telescope.nvim",
-        branch = "0.1.x",
+        version = false,
         dependencies = {
             "plenary.nvim",
             "telescope-fzf-native.nvim",
@@ -73,7 +118,11 @@ return {
             },
             {
                 "<leader>fR",
-                twrap("oldfiles", { cwd = vim.uv.cwd() }),
+                function()
+                    require("telescope.builtin").oldfiles({
+                        cwd = vim.uv.cwd(),
+                    })
+                end,
                 desc = "Recent (cwd)",
             },
             -- git
@@ -214,6 +263,24 @@ return {
                 "<leader>uC",
                 twrap("colorscheme", { enable_preview = true }),
                 desc = "Colorscheme with Preview",
+            },
+            {
+                "<leader>ss",
+                function()
+                    require("telescope.builtin").lsp_document_symbols({
+                        symbols = get_kind_filter(),
+                    })
+                end,
+                desc = "Goto Symbol",
+            },
+            {
+                "<leader>sS",
+                function()
+                    require("telescope.builtin").lsp_dynamic_workspace_symbols({
+                        symbols = get_kind_filter(),
+                    })
+                end,
+                desc = "Goto Symbol (Workspace)",
             },
         },
     },

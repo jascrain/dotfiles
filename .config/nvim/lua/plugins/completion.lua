@@ -13,7 +13,7 @@ return {
                 default = true,
             })
             local cmp = require("cmp")
-            local LazyVim = require("lazyvim")
+            local defaults = require("cmp.config.default")()
 
             local function has_words_before()
                 local row, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -30,6 +30,12 @@ return {
                 mapping = cmp.mapping.preset.insert({
                     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
+                    ["<C-n>"] = cmp.mapping.select_next_item({
+                        behavior = cmp.SelectBehavior.Insert,
+                    }),
+                    ["<C-p>"] = cmp.mapping.select_prev_item({
+                        behavior = cmp.SelectBehavior.Insert,
+                    }),
                     ["<C-Space>"] = cmp.mapping.complete(),
                     ["<CR>"] = cmp.mapping.confirm({ select = true }),
                     ["<C-y>"] = cmp.mapping.confirm({ select = true }),
@@ -39,7 +45,7 @@ return {
                     ["<C-CR>"] = cmp.mapping(function(fallback)
                         cmp.abort()
                         fallback()
-                    end, { "i", "s" }),
+                    end),
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             cmp.select_next_item()
@@ -67,17 +73,38 @@ return {
                     format = function(_, item)
                         local icons = LazyVim.config.icons.kinds
                         if icons[item.kind] then
-                            item.kind = icons[item.kind] .. item.kind
+                            item.kind = icons[item.kind] .. " " .. item.kind
                         end
+
+                        local widths = {
+                            abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
+                            menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
+                        }
+
+                        for key, width in pairs(widths) do
+                            if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
+                                item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
+                            end
+                        end
+
                         return item
                     end,
+
                 },
                 experimental = {
                     ghost_text = {
                         hl_group = "CmpGhostText",
                     },
                 },
+                sorting = defaults.sorting,
             }
+        end,
+        config = function(_, opts)
+            local cmp = require("cmp")
+            cmp.setup(opts)
+            cmp.event:on("menu_opened", function(event)
+                LazyVim.cmp.add_missing_snippet_docs(event.window)
+            end)
         end,
     },
     {

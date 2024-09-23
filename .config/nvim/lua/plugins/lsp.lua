@@ -1,7 +1,26 @@
 local function on_lsp_attach(args, opts)
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-    vim.keymap.set("n", "gD", vim.lsp.buf.declaration)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover)
+    vim.keymap.set(
+        "n",
+        "gd",
+        vim.lsp.buf.definition)
+    vim.keymap.set("n",
+        "gr",
+        vim.lsp.buf.references,
+        { desc = "References" })
+    vim.keymap.set("n",
+        "gI",
+        vim.lsp.buf.implementation,
+        { desc = "Implementation" })
+    vim.keymap.set("n",
+        "gy",
+        vim.lsp.buf.type_definition,
+        { desc = "Type Definition" })
+    vim.keymap.set("n",
+        "gD",
+        vim.lsp.buf.declaration)
+    vim.keymap.set("n",
+        "K",
+        vim.lsp.buf.hover)
     vim.keymap.set(
         { "n", "v" },
         "<leader>ca",
