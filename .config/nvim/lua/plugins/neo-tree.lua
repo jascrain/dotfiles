@@ -9,13 +9,7 @@ return {
                 function()
                     require("neo-tree.command").execute({
                         toggle = true,
-                        dir = (function()
-                            local fname = vim.api.nvim_buf_get_name(0)
-                            if fname and fname ~= "" then
-                                return vim.fs.dirname(fname)
-                            end
-                            return vim.uv.cwd()
-                        end)(),
+                        dir = LazyVim.root()
                     })
                 end,
                 desc = "Explorer NeoTree (Root Dir)",
@@ -55,7 +49,7 @@ return {
             vim.cmd([[Neotree close]])
         end,
         init = function()
-            -- FIX: use `autocmd` for layz-loading neo-tree instead of directly
+            -- FIX: use `autocmd` for lazy-loading neo-tree instead of directly
             -- requiring it, because `cwd` is not set up properly.
             vim.api.nvim_create_autocmd("BufEnter", {
                 group = vim.api.nvim_create_augroup(
@@ -80,7 +74,6 @@ return {
                 "filesystem",
                 "buffers",
                 "git_status",
-                "document_symbols",
             },
             open_files_do_not_replace_types = {
                 "terminal",

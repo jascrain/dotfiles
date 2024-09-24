@@ -1,65 +1,96 @@
-local function on_lsp_attach(args, opts)
-    vim.keymap.set(
-        "n",
-        "gd",
-        vim.lsp.buf.definition)
-    vim.keymap.set("n",
-        "gr",
-        vim.lsp.buf.references,
-        { desc = "References" })
-    vim.keymap.set("n",
-        "gI",
-        vim.lsp.buf.implementation,
-        { desc = "Implementation" })
-    vim.keymap.set("n",
-        "gy",
-        vim.lsp.buf.type_definition,
-        { desc = "Type Definition" })
-    vim.keymap.set("n",
-        "gD",
-        vim.lsp.buf.declaration)
-    vim.keymap.set("n",
-        "K",
-        vim.lsp.buf.hover)
-    vim.keymap.set(
-        { "n", "v" },
-        "<leader>ca",
-        vim.lsp.buf.code_action,
-        { desc = "Code Action" })
-    vim.keymap.set(
-        { "n", "v" },
-        "<leader>cc",
-        vim.lsp.codelens.run,
-        { desc = "Codelens" })
-    vim.keymap.set("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename" })
+local function on_lsp_attach(client, _)
+    local keys = {
+        {
+            "<leader>cl",
+            "<cmd>LspInfo<cr>",
+            desc = "LspInfo",
+        },
+        {
+            "gd",
+            vim.lsp.buf.definition,
+            has = "textDocument/definition",
+        },
+        {
+            "gr",
+            vim.lsp.buf.references,
+            desc = "References",
+        },
+        {
+            "gI",
+            vim.lsp.buf.implementation,
+            desc = "Implementation",
+        },
+        {
+            "gy",
+            vim.lsp.buf.type_definition,
+            desc = "Type Definition",
+        },
+        {
+            "gD",
+            vim.lsp.buf.declaration,
+        },
+        {
+            "K",
+            vim.lsp.buf.hover,
+        },
+        {
+            "gK",
+            vim.lsp.buf.signature_help,
+            desc = "Signature Help",
+        },
+        {
+            "<c-k>",
+            vim.lsp.buf.signature_help,
+            desc = "Signature Help",
+            mode = "i",
+        },
+        {
+            "<leader>ca",
+            vim.lsp.buf.code_action,
+            desc = "Code Action",
+            mode = { "n", "v" },
+        },
+        {
+            "<leader>cc",
+            vim.lsp.codelens.run,
+            desc = "Run Codelens",
+            mode = { "n", "v" },
+        },
+        {
+            "<leader>cC",
+            vim.lsp.codelens.refresh,
+            desc = "Refresh Codelens",
+        },
+        {
+            "<leader>cR",
+            LazyVim.lsp.rename_file,
+            desc = "Rename File",
+        },
+        {
+            "<leader>cr",
+            vim.lsp.buf.rename,
+            desc = "Rename",
+        },
+        {
+            "<leader>cA",
+            LazyVim.lsp.action.source,
+            desc = "Source Action",
+        },
+    }
 
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    for _, k in pairs(keys) do
+        local has = true
 
-    if
-        vim.tbl_get(opts, "inlay_hints", "enabled")
-        and client
-        and client.supports_method("textDocument/inlayHint")
-        and vim.lsp.inlay_hint -- new in neovim 0.10.0
-        and not vim.tbl_contains(
-            opts.inlay_hints.exclude or {},
-            vim.bo[args.buf].filetype)
-    then
-        vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
-    end
+        if k.has then
+            has = client.supports_method(k.has)
+        end
 
-    if
-        vim.tbl_get(opts, "codelens", "enabled")
-        and client
-        and client.supports_method("textDocument/codeLens")
-        and vim.lsp.codelens
-    then
-        vim.lsp.codelens.refresh()
-        vim.api.nvim_create_autocmd(
-            { "BufEnter", "CursorHold", "InsertLeave" },
-            {
-                buffer = args.buf,
-                callback = vim.lsp.codelens.refresh,
-            })
+        if has then
+            local opts = {
+                desc = k.desc,
+            }
+            vim.keymap.set(k.mode or "n", k[1], k[2], opts)
+        end
     end
 end
 
@@ -95,11 +126,41 @@ return {
             },
         },
         config = function(_, opts)
-            vim.api.nvim_create_autocmd("LspAttach", {
-                callback = function(args)
-                    on_lsp_attach(args, opts or {})
-                end,
-            })
+            LazyVim.lsp.on_attach(on_lsp_attach)
+            LazyVim.lsp.setup()
+
+            if vim.tbl_get(opts, "inlay_hints", "enabled") then
+                LazyVim.lsp.on_supports_method("textDocument/inlayHint", function(_, buffer)
+                    if
+                        vim.api.nvim_buf_is_valid(buffer)
+                        and vim.bo[buffer].bufftype == ""
+                            and not vim.tbl_contains(
+                                opts.inlay_hints.exclude or {},
+                                vim.bo[buffer].filetype)
+                    then
+                        vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
+                    end
+                end)
+            end
+
+            if
+                vim.tbl_get(opts, "codelens", "enabled")
+                and vim.lsp.codelens
+            then
+                LazyVim.lsp.on_supports_method(
+                    "textDocument/codeLens",
+                    function(client, buffer)
+                        vim.lsp.codelens.refresh()
+                        vim.api.nvim_create_autocmd(
+                            { "BufEnter", "CursorHold", "InsertLeave" },
+                            {
+                                buffer = buffer,
+                                callback = vim.lsp.codelens.refresh,
+                            }
+                        )
+                    end
+                )
+            end
 
             local servers = (opts and opts.servers) or {}
             local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")

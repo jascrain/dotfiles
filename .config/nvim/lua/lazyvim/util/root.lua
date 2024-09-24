@@ -1,4 +1,8 @@
-local M = {}
+local M = setmetatable({}, {
+  __call = function(m)
+    return m.get()
+  end,
+})
 
 M.spec = { "lsp", { ".git", "lua" }, "cwd" }
 

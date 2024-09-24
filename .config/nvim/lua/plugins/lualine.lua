@@ -34,10 +34,15 @@ return {
                     LazyVim.lualine.root_dir(),
                     { "diagnostics", icons_enabled = false },
                     {
+                        function() return " " end,
+                        separator = "",
+                        padding = 0,
+                    },
+                    {
                         "filetype",
                         icon_only = true,
                         separator = "",
-                        padding = { left = 1, right = 0 }
+                        padding = 0,
                     },
                     {
                         LazyVim.lualine.pretty_path({
@@ -112,10 +117,15 @@ return {
                     LazyVim.lualine.root_dir(),
                     { "diagnostics", icons_enabled = false },
                     {
+                        function() return " " end,
+                        separator = "",
+                        padding = 0,
+                    },
+                    {
                         "filetype",
                         icon_only = true,
                         separator = "",
-                        padding = { left = 1, right = 0 }
+                        padding = 0,
                     },
                     {
                         LazyVim.lualine.pretty_path({

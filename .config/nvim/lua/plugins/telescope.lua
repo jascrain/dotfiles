@@ -302,7 +302,6 @@ return {
             return true
         end,
         config = function(plugin)
-            LazyVim = require("lazyvim")
             LazyVim.on_load("telescope.nvim", function()
                 local lib = plugin.dir .. "/build/libfzf." .. (LazyVim.is_win() and "dll" or "so")
                 if not vim.uv.fs_stat(lib) then

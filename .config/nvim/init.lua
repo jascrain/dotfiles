@@ -13,8 +13,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     })
 end
 vim.opt.rtp:prepend(lazypath)
-_G.LazyVim = require("lazyvim")
-LazyVim.setup()
+require("lazyvim").setup()
 require("lazy").setup("plugins")
 
 vim.o.breakindent = true

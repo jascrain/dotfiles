@@ -10,6 +10,7 @@ return {
     },
     {
         "nvim-treesitter/nvim-treesitter",
+        version = false,
         build = ":TSUpdate",
         event = { "LazyFile", "VeryLazy" },
         -- load early when opening a file from the cmdline
