@@ -1,5 +1,5 @@
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -17,17 +17,22 @@ require("lazyvim").setup()
 require("lazy").setup("plugins")
 
 vim.o.breakindent = true
-vim.o.expandtab = true
+vim.o.expandtab = true      -- use spaces instead of tabs
 vim.o.ignorecase = true
-vim.o.smartcase = true
+vim.o.list = true           -- show some invisible characters (tabs...
+vim.o.number = true         -- show line numbers
 vim.o.shiftwidth = 4
 vim.o.signcolumn = "yes"
+vim.o.smartcase = true      -- don't ignore case with capitals
 vim.o.softtabstop = 4
-vim.o.termguicolors = true
-vim.o.undofile = true   -- persistant undo
-vim.wo.number = true    -- show line numbers
-vim.cmd.colorscheme("gruvbox")
+vim.o.splitbelow = true     -- put new windows below current
+vim.o.splitright = true     -- put new windows right of current
+vim.o.termguicolors = true  -- true color support
+vim.o.undofile = true       -- persistant undo
+vim.o.updatetime = 200      -- save swap file and trigger CursorHold
 
+vim.g.markdown_recommended_style = 0
+vim.cmd.colorscheme("gruvbox")
 
 local function diagnostic_icon(diagnostic)
     local icons = LazyVim.config.icons.diagnostics

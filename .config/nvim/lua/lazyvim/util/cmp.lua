@@ -38,4 +38,9 @@ function M.add_missing_snippet_docs(window)
     end
 end
 
+function M.visible()
+    local cmp = package.loaded["cmp"]
+    return cmp and cmp.core.view:visible()
+end
+
 return M

@@ -76,20 +76,60 @@ local function on_lsp_attach(client, _)
             LazyVim.lsp.action.source,
             desc = "Source Action",
         },
+        {
+            "]]",
+            function()
+                LazyVim.lsp.words.jump(vim.v.count1)
+            end,
+            desc = "Next Reference",
+            has = "textDocument/documentHighlight",
+            cond = function()
+                return LazyVim.lsp.words.enabled
+            end,
+        },
+        {
+            "[[",
+            function()
+                LazyVim.lsp.words.jump(-vim.v.count1)
+            end,
+            desc = "Prev Reference",
+            has = "textDocument/documentHighlight",
+            cond = function()
+                return LazyVim.lsp.words.enabled
+            end,
+        },
+        {
+            "<a-n>",
+            function()
+                LazyVim.lsp.words.jump(vim.v.count1, true)
+            end,
+            desc = "Next Reference",
+            has = "textDocument/documentHighlight",
+            cond = function()
+                return LazyVim.lsp.words.enabled
+            end
+        },
+        {
+            "<a-p>",
+            function()
+                LazyVim.lsp.words.jump(-vim.v.count1, true)
+            end,
+            desc = "Prev Reference",
+            has = "textDocument/documentHighlight",
+            cond = function()
+                return LazyVim.lsp.words.enabled
+            end,
+        },
     }
 
     for _, k in pairs(keys) do
-        local has = true
-
-        if k.has then
-            has = client.supports_method(k.has)
-        end
-
-        if has then
-            local opts = {
-                desc = k.desc,
-            }
-            vim.keymap.set(k.mode or "n", k[1], k[2], opts)
+        if
+            (not k.cond or k.cond())
+            and (not k.has or client.supports_method(k.has))
+        then
+            vim.keymap.set(k.mode or "n", k[1], k[2], {
+                desc = k.desc
+            })
         end
     end
 end
@@ -103,16 +143,6 @@ return {
             "mason-lspconfig.nvim",
         },
         opts = {
-            diagnostics = {
-                underline = true,
-                update_in_insert = false,
-                virtual_text = {
-                    spacing = 4,
-                    source = "if_many",
-                    prefix = "●",
-                },
-                severity_sort = true,
-            },
             inlay_hints = {
                 enabled = false,
                 exclude = { "vue" },
@@ -120,20 +150,29 @@ return {
             codelens = {
                 enabled = false,
             },
+            document_highlight = {
+                enabled = true,
+            },
             capabilities = {
             },
+            format = {
+            },
             servers = {
+            },
+            setup = {
             },
         },
         config = function(_, opts)
             LazyVim.lsp.on_attach(on_lsp_attach)
             LazyVim.lsp.setup()
+            LazyVim.lsp.on_dynamic_capability(on_lsp_attach)
+            LazyVim.lsp.words.setup(opts.document_highlight)
 
             if vim.tbl_get(opts, "inlay_hints", "enabled") then
                 LazyVim.lsp.on_supports_method("textDocument/inlayHint", function(_, buffer)
                     if
                         vim.api.nvim_buf_is_valid(buffer)
-                        and vim.bo[buffer].bufftype == ""
+                        and vim.bo[buffer].buftype == ""
                             and not vim.tbl_contains(
                                 opts.inlay_hints.exclude or {},
                                 vim.bo[buffer].filetype)
@@ -149,7 +188,7 @@ return {
             then
                 LazyVim.lsp.on_supports_method(
                     "textDocument/codeLens",
-                    function(client, buffer)
+                    function(_, buffer)
                         vim.lsp.codelens.refresh()
                         vim.api.nvim_create_autocmd(
                             { "BufEnter", "CursorHold", "InsertLeave" },
@@ -176,6 +215,21 @@ return {
                 local server_opts = vim.tbl_deep_extend("force", {
                     capabilities = vim.deepcopy(capabilities),
                 }, servers[server] or {})
+                if server_opts.enabled == false then
+                    return
+                end
+
+                if opts and opts.setup then
+                    if opts.setup[server] then
+                        if opts.setup[server](server, server_opts) then
+                            return
+                        end
+                    elseif opts.setup["*"] then
+                        if opts.setup["*"](server, server_opts) then
+                            return
+                        end
+                    end
+                end
                 require("lspconfig")[server].setup(server_opts)
             end
 
