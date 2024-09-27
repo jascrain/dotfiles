@@ -18,11 +18,13 @@ require("lazy").setup("plugins")
 
 vim.o.breakindent = true
 vim.o.expandtab = true      -- use spaces instead of tabs
+vim.o.foldlevel = 99
 vim.o.ignorecase = true
 vim.o.list = true           -- show some invisible characters (tabs...
 vim.o.number = true         -- show line numbers
+vim.o.pumblend = 10         -- popup blend
+vim.o.pumheight = 10        -- maximum number of entries in a popup
 vim.o.shiftwidth = 4
-vim.o.signcolumn = "yes"
 vim.o.smartcase = true      -- don't ignore case with capitals
 vim.o.softtabstop = 4
 vim.o.splitbelow = true     -- put new windows below current
@@ -30,6 +32,13 @@ vim.o.splitright = true     -- put new windows right of current
 vim.o.termguicolors = true  -- true color support
 vim.o.undofile = true       -- persistant undo
 vim.o.updatetime = 200      -- save swap file and trigger CursorHold
+vim.o.virtualedit = "block"
+
+if vim.fn.has("nvim-0.10") == 1 then
+    vim.opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
+    vim.opt.foldmethod = "expr"
+    vim.opt.foldtext = ""
+end
 
 vim.g.markdown_recommended_style = 0
 vim.cmd.colorscheme("gruvbox")

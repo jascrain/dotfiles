@@ -5,6 +5,9 @@ local M = {}
 LazyVim.config = M
 
 M.icons = {
+    misc = {
+        dots = "󰇘",
+    },
     diagnostics = {
       Error = "",
       Warn  = "",

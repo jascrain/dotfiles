@@ -136,7 +136,7 @@ return {
                     },
                 },
             },
-            extensions = { "neo-tree", "lazy" },
+            extensions = { "neo-tree" },
         }
 
         if vim.g.trouble_lualine and LazyVim.has("trouble.nvim") then
