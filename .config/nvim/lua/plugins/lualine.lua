@@ -31,7 +31,7 @@ return {
                 lualine_a = { "mode" },
                 lualine_b = { "branch" },
                 lualine_c = {
-                    LazyVim.lualine.root_dir(),
+                    IS.project_name(),
                     { "diagnostics", icons_enabled = false },
                     {
                         function() return " " end,
@@ -45,10 +45,7 @@ return {
                         padding = 0,
                     },
                     {
-                        LazyVim.lualine.pretty_path({
-                            modified_sign = "[+]",
-                            readonly_icon = "[-]",
-                        }),
+                        IS.pretty_path(),
                         padding = { left = 0, right = 1 },
                     },
                 },
@@ -114,7 +111,7 @@ return {
                 lualine_a = {},
                 lualine_b = { "branch" },
                 lualine_c = {
-                    LazyVim.lualine.root_dir(),
+                    IS.project_name(),
                     { "diagnostics", icons_enabled = false },
                     {
                         function() return " " end,
@@ -128,10 +125,7 @@ return {
                         padding = 0,
                     },
                     {
-                        LazyVim.lualine.pretty_path({
-                            modified_sign = "[+]",
-                            readonly_icon = "[-]",
-                        }),
+                        IS.pretty_path(),
                         padding = { left = 0, right = 1 },
                     },
                 },

@@ -28,7 +28,7 @@ shopt -s checkwinsize
 
 # set hostname for podman & toolbox containers
 if [ -n "$container" ] && [ -f /run/.containerenv ]; then
-    HOSTNAME="$(sed -E '/^name=/{s/^name="?//;s/"?$//;q};d' /run/.containerenv)"
+    HOSTNAME="$(sed -E '/^name=/{s/^name="?//;s/"?$//;s/-toolbox-//;q};d' /run/.containerenv)"
     if [ -d /run/systemd/system ] && [ -x /usr/bin/hostnamectl ]; then
         HOSTNAME_HOST=$(/usr/bin/hostnamectl hostname)
     elif [ -f /run/host/etc/hostname ]; then

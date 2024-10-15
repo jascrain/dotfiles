@@ -12,6 +12,27 @@ function M.detectors.cwd()
     return { vim.uv.cwd() }
 end
 
+function M.detectors.lsp(buf)
+    local bufpath = M.bufpath(buf)
+    if not bufpath then
+        return {}
+    end
+    local roots = {}
+    for _, client in pairs(vim.lsp.get_clients({ bufnr = buf })) do
+        local workspace = client.config.workspace_folders
+        for _, ws in pairs(workspace or {}) do
+            roots[#roots + 1] = vim.uri_to_fname(ws.uri)
+        end
+        if client.root_dir then
+            roots[#roots + 1] = client.root_dir
+        end
+    end
+    return vim.tbl_filter(function(path)
+        path = vim.fs.normalize(path)
+        return path and bufpath:find(path, 1, true) == 1
+    end, roots)
+end
+
 function M.detectors.pattern(buf, patterns)
     patterns = type(patterns) == "string" and { patterns } or patterns
     local path = M.bufpath(buf) or vim.uv.cwd()
@@ -30,20 +51,11 @@ function M.detectors.pattern(buf, patterns)
 end
 
 function M.bufpath(buf)
-    return M.realpath(vim.api.nvim_buf_get_name(assert(buf)))
+    return vim.api.nvim_buf_get_name(assert(buf))
 end
 
 function M.cwd()
-    return M.realpath(vim.uv.cwd()) or ""
-end
-
-function M.realpath(path)
-    if path ==  "" or path == nil then
-        return nil
-    end
-    path = vim.uv.fs_realpath(path) or path
-    return path
-    -- return LazyVim.norm(path)
+    return vim.uv.cwd() or ""
 end
 
 M.cache = {}
@@ -78,9 +90,8 @@ function M.detect(opts)
         paths = type(paths) == "table" and paths or { paths }
         local roots = {}
         for _, p in ipairs(paths) do
-            local pp = M.realpath(p)
-            if pp and not vim.tbl_contains(roots, pp) then
-                roots[#roots + 1] = pp
+            if p and not vim.tbl_contains(roots, p) then
+                roots[#roots + 1] = p
             end
         end
         table.sort(roots, function(a, b)

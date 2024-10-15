@@ -15,6 +15,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 require("lazyvim").setup()
 require("lazy").setup("plugins")
+require("is")
 
 vim.o.breakindent = true
 vim.o.expandtab = true      -- use spaces instead of tabs
