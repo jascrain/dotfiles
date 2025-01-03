@@ -3,7 +3,7 @@ local function wrap(command, opts)
     return function()
         opts = vim.deepcopy(opts)
         if not opts.cwd and opts.root ~= false then
-            opts.cwd = LazyVim.root()
+            opts.cwd = IS.root()
         end
         require("fzf-lua")[command](opts)
     end
@@ -39,7 +39,8 @@ return {
 
             -- Trouble
             if LazyVim.has("trouble.nvim") then
-                config.defaults.actions.files["ctrl-t"] = require("trouble.sources.fzf").actions.open
+                config.defaults.actions.files["ctrl-t"] =
+                    require("trouble.sources.fzf").actions.open
             end
 
             -- Toggle root dir / cwd
@@ -50,8 +51,12 @@ return {
                 o.buf = ctx.__CTX.bufnr
                 wrap(ctx.__INFO.cmd, o)()
             end
-            config.defaults.actions.files["alt-c"] = config.defaults.actions.files["ctrl-r"]
-            config.set_action_helpstr(config.defaults.actions.files["ctrl-r"], "toggle-root-dir")
+            config.defaults.actions.files["alt-c"] =
+                config.defaults.actions.files["ctrl-r"]
+            config.set_action_helpstr(
+                config.defaults.actions.files["ctrl-r"],
+                "toggle-root-dir"
+            )
 
             return {
                 "default-title",
@@ -63,37 +68,53 @@ return {
                     formatter = "path.dirname_first",
                 },
                 ui_select = function(fzf_opts, items)
-                    return vim.tbl_deep_extend("force", fzf_opts,
-                        {
-                            prompt = " ",
-                            winopts = {
-                                title = " " .. vim.trim((fzf_opts.prompt or "Select"):gsub("%s*:%s*$", "")) .. " ",
-                                title_pos = "center",
-                            },
+                    return vim.tbl_deep_extend("force", fzf_opts, {
+                        prompt = " ",
+                        winopts = {
+                            title = " "
+                                .. vim.trim(
+                                    (fzf_opts.prompt or "Select"):gsub(
+                                        "%s*:%s*$",
+                                        ""
+                                    )
+                                )
+                                .. " ",
+                            title_pos = "center",
                         },
-                        fzf_opts.kind == "codeaction" and {
-                            winopts = {
-                                layout = "vertical",
-                                -- height is number of items minus 15 lines for the preview, with a max of 80% screen height
-                                height = math.floor(math.min(vim.o.lines * 0.8 - 16, #items + 2) + 0.5) + 16,
-                                width = 0.5,
-                                preview = not vim.tbl_isempty(LazyVim.lsp.get_clients({ bufnr = 0, name = "vtsls" })) and {
-                                    layout = "vertical",
-                                    vertical = "down:15,border-top",
-                                    hidden = "hidden",
-                                } or {
+                    }, fzf_opts.kind == "codeaction" and {
+                        winopts = {
+                            layout = "vertical",
+                            -- height is number of items minus 15 lines for the preview, with a max of 80% screen height
+                            height = math.floor(
+                                math.min(vim.o.lines * 0.8 - 16, #items + 2)
+                                    + 0.5
+                            ) + 16,
+                            width = 0.5,
+                            preview = not vim.tbl_isempty(
+                                        LazyVim.lsp.get_clients({
+                                            bufnr = 0,
+                                            name = "vtsls",
+                                        })
+                                    )
+                                    and {
+                                        layout = "vertical",
+                                        vertical = "down:15,border-top",
+                                        hidden = "hidden",
+                                    }
+                                or {
                                     layout = "vertical",
                                     vertical = "down:15,border-top",
                                 },
-                            },
-                        } or {
-                            winopts = {
-                                  width = 0.5,
-                                  -- height is number of items, with a max of 80% screen height
-                                  height = math.floor(math.min(vim.o.lines * 0.8, #items + 2) + 0.5),
-                            },
-                        }
-                    )
+                        },
+                    } or {
+                        winopts = {
+                            width = 0.5,
+                            -- height is number of items, with a max of 80% screen height
+                            height = math.floor(
+                                math.min(vim.o.lines * 0.8, #items + 2) + 0.5
+                            ),
+                        },
+                    })
                 end,
                 winopts = {
                     width = 0.8,
@@ -128,7 +149,9 @@ return {
                         child_prefix = false,
                     },
                     code_actions = {
-                        previewer = vim.fn.executable("delta") == 1 and "codeaction_native" or nil,
+                        previewer = vim.fn.executable("delta") == 1
+                                and "codeaction_native"
+                            or nil,
                     },
                 },
             }
@@ -146,7 +169,11 @@ return {
                     end
                     return t
                 end
-                opts = vim.tbl_deep_extend("force", fix(require("fzf-lua.profiles.default-title")), opts)
+                opts = vim.tbl_deep_extend(
+                    "force",
+                    fix(require("fzf-lua.profiles.default-title")),
+                    opts
+                )
                 opts[1] = nil
             end
             require("fzf-lua").setup(opts)
@@ -354,7 +381,10 @@ return {
             },
             {
                 "<leader>sS",
-                wrap("lsp_live_workspace_symbols", { regex_filter = symbols_filter }),
+                wrap(
+                    "lsp_live_workspace_symbols",
+                    { regex_filter = symbols_filter }
+                ),
                 desc = "Goto Symbol (Workspace)",
             },
         },

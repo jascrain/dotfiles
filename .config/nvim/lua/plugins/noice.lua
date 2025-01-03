@@ -32,7 +32,8 @@ return {
         },
         keys = {
             { "<leader>sn", "", desc = "+noice" },
-            { "<S-Enter>",
+            {
+                "<S-Enter>",
                 function()
                     require("noice").redirect(vim.fn.getcmdline())
                 end,
@@ -44,7 +45,7 @@ return {
                 function()
                     require("noice").cmd("last")
                 end,
-                desc = "Noice Last Message"
+                desc = "Noice Last Message",
             },
             {
                 "<leader>snh",

@@ -4,10 +4,26 @@ return {
         dependencies = "nvim-web-devicons",
         event = "VeryLazy",
         keys = {
-            { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
-            { "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
-            { "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete Buffers to the Right" },
-            { "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", desc = "Delete Buffers to the Left" },
+            {
+                "<leader>bp",
+                "<Cmd>BufferLineTogglePin<CR>",
+                desc = "Toggle Pin",
+            },
+            {
+                "<leader>bP",
+                "<Cmd>BufferLineGroupClose ungrouped<CR>",
+                desc = "Delete Non-Pinned Buffers",
+            },
+            {
+                "<leader>br",
+                "<Cmd>BufferLineCloseRight<CR>",
+                desc = "Delete Buffers to the Right",
+            },
+            {
+                "<leader>bl",
+                "<Cmd>BufferLineCloseLeft<CR>",
+                desc = "Delete Buffers to the Left",
+            },
             { "<M-h>", "<Cmd>BufferLineCyclePrev<CR>", desc = "Prev Buffer" },
             { "<M-l>", "<Cmd>BufferLineCycleNext<CR>", desc = "Next Buffer" },
             { "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
@@ -27,8 +43,10 @@ return {
                 always_show_bufferline = false,
                 diagnostics_indicator = function(_, _, diag)
                     local icons = LazyVim.config.icons.diagnostics
-                    local ret = (diag.error and icons.Error .. diag.error .. " " or "")
-                      .. (diag.warning and icons.Warn .. diag.warning or "")
+                    local ret = (
+                        diag.error and icons.Error .. diag.error .. " " or ""
+                    )
+                        .. (diag.warning and icons.Warn .. diag.warning or "")
                     return vim.trim(ret)
                 end,
                 offsets = {

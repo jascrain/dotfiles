@@ -161,6 +161,10 @@ function M.init()
     return
   end
   M.did_init = true
+
+  -- delay notifications till vim.notify was replaced or after 500ms
+  LazyVim.lazy_notify()
+
   LazyVim.plugin.setup()
 end
 

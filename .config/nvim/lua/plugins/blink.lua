@@ -7,7 +7,7 @@ return {
             "sources.compat",
             "sources.default",
         },
-        dependencies = "friendly-snippets",
+        dependencies = "rafamadriz/friendly-snippets",
         event = { "InsertEnter", "CmdlineEnter" },
         opts = {
             appearance = {
@@ -48,8 +48,11 @@ return {
                 ["<Tab>"] = {
                     "show",
                     function(cmp)
-                        if cmp.snippet_active() then return cmp.accept()
-                        else return cmp.select_and_accept() end
+                        if cmp.snippet_active() then
+                            return cmp.accept()
+                        else
+                            return cmp.select_and_accept()
+                        end
                     end,
                     "snippet_forward",
                     "fallback",
@@ -67,6 +70,7 @@ return {
         "saghen/blink.cmp",
         opts = {
             sources = {
+                -- add lazydev to your completion providers
                 default = { "lazydev" },
                 providers = {
                     lazydev = {
@@ -86,9 +90,5 @@ return {
         opts = {
             integrations = { blink_cmp = true },
         },
-    },
-    {
-        "rafamadriz/friendly-snippets",
-        lazy = true,
     },
 }

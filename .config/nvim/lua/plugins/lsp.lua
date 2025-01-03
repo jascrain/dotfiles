@@ -107,7 +107,7 @@ local function setup_keymaps(client, _)
             has = "textDocument/documentHighlight",
             cond = function()
                 return Snacks.words.is_enabled()
-            end
+            end,
         },
         {
             "<a-p>",
@@ -128,7 +128,7 @@ local function setup_keymaps(client, _)
             and (not k.has or client.supports_method(k.has))
         then
             vim.keymap.set(k.mode or "n", k[1], k[2], {
-                desc = k.desc
+                desc = k.desc,
             })
         end
     end
@@ -153,14 +153,10 @@ return {
             document_highlight = {
                 enabled = true,
             },
-            capabilities = {
-            },
-            format = {
-            },
-            servers = {
-            },
-            setup = {
-            },
+            capabilities = {},
+            format = {},
+            servers = {},
+            setup = {},
         },
         config = function(_, opts)
             LazyVim.format.register(LazyVim.lsp.formatter())
@@ -169,17 +165,21 @@ return {
             LazyVim.lsp.on_dynamic_capability(setup_keymaps)
 
             if vim.tbl_get(opts, "inlay_hints", "enabled") then
-                LazyVim.lsp.on_supports_method("textDocument/inlayHint", function(_, buffer)
-                    if
-                        vim.api.nvim_buf_is_valid(buffer)
-                        and vim.bo[buffer].buftype == ""
-                        and not vim.tbl_contains(
-                            opts.inlay_hints.exclude or {},
-                            vim.bo[buffer].filetype)
-                    then
-                        vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
+                LazyVim.lsp.on_supports_method(
+                    "textDocument/inlayHint",
+                    function(_, buffer)
+                        if
+                            vim.api.nvim_buf_is_valid(buffer)
+                            and vim.bo[buffer].buftype == ""
+                            and not vim.tbl_contains(
+                                opts.inlay_hints.exclude or {},
+                                vim.bo[buffer].filetype
+                            )
+                        then
+                            vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
+                        end
                     end
-                end)
+                )
             end
 
             if
@@ -286,8 +286,8 @@ return {
         opts = {
             library = {
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-                { path = "LazyVim",            words = { "LazyVim" } },
-                { path = "snacks.nvim",        words = { "Snacks" } },
+                { path = "LazyVim", words = { "LazyVim" } },
+                { path = "snacks.nvim", words = { "Snacks" } },
                 { path = "lazy.nvim" },
             },
         },

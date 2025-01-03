@@ -8,7 +8,7 @@ return {
                 function()
                     require("neo-tree.command").execute({
                         toggle = true,
-                        dir = LazyVim.root()
+                        dir = IS.root(),
                     })
                 end,
                 desc = "Explorer NeoTree (Root Dir)",
@@ -18,7 +18,7 @@ return {
                 function()
                     require("neo-tree.command").execute({
                         toggle = true,
-                        dir = vim.uv.cwd()
+                        dir = vim.uv.cwd(),
                     })
                 end,
                 desc = "Explorer NeoTree (cwd)",
@@ -53,7 +53,8 @@ return {
             vim.api.nvim_create_autocmd("BufEnter", {
                 group = vim.api.nvim_create_augroup(
                     "Neotree_start_directory",
-                    { clear = true }),
+                    { clear = true }
+                ),
                 desc = "Start Neo-tree with directory",
                 once = true,
                 callback = function()
@@ -110,14 +111,14 @@ return {
             opts.event_handlers = opts.event_handlers or {}
             vim.list_extend(opts.event_handlers, {
                 { event = events.FILE_MOVED, handler = on_move },
-                { event = events.FILE_RENAMED, handler = on_move},
+                { event = events.FILE_RENAMED, handler = on_move },
             })
             require("neo-tree").setup(opts)
             vim.api.nvim_create_autocmd("TermClose", {
                 pattern = "*lazygit",
                 callback = function()
                     if package.loaded["neo-tree.sources.git_status"] then
-                    require("neo-tree.sources.git_status").refresh()
+                        require("neo-tree.sources.git_status").refresh()
                     end
                 end,
             })

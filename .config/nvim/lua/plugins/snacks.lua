@@ -12,7 +12,6 @@ return {
             notifier = { enabled = true },
             scope = { enabled = true },
             statuscolumn = { enabled = false },
-            -- toggle = { map = LazyVim.safe_keymap_set },
             words = { enabled = true },
         },
         keys = {
@@ -30,14 +29,29 @@ return {
                 end,
                 desc = "Dismiss All Notifications",
             },
+            {
+                "<leader>.",
+                function()
+                    Snacks.scratch()
+                end,
+                desc = "Toggle Scratch Buffer",
+            },
+            {
+                "<leader>S",
+                function()
+                    Snacks.scratch.select()
+                end,
+                desc = "Select Scratch Buffer",
+            },
         },
         config = function(_, opts)
             local notify = vim.notify
             require("snacks").setup(opts)
-            -- HACK: restore vim.notify after snacks setup and let noice.nvim take over
-            -- this is needed to have early notifications show up in noice history
+            -- HACK: restore vim.notify after snacks setup and let noice.nvim
+            -- take over this is needed to have early notifications show up
+            -- in noice history
             if LazyVim.has("noice.nvim") then
-        	vim.notify = notify
+                vim.notify = notify
             end
         end,
     },

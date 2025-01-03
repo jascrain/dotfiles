@@ -42,7 +42,9 @@ return {
                         icons_enabled = false,
                     },
                     {
-                        function() return " " end,
+                        function()
+                            return " "
+                        end,
                         separator = "",
                         padding = 0,
                     },
@@ -65,13 +67,13 @@ return {
                         end,
                         cond = function()
                             return (
-                                package.loaded["noice"] and
-                                require("noice").api.status.mode.has()
+                                package.loaded["noice"]
+                                and require("noice").api.status.mode.has()
                             )
                         end,
                         color = function()
                             return {
-                                fg = Snacks.util.color("Statement")
+                                fg = Snacks.util.color("Statement"),
                             }
                         end,
                     },
@@ -81,13 +83,13 @@ return {
                         end,
                         cond = function()
                             return (
-                                package.loaded["dap"] and
-                                require("dap").status() ~= ""
+                                package.loaded["dap"]
+                                and require("dap").status() ~= ""
                             )
                         end,
                         color = function()
                             return {
-                                fg = Snacks.util.color("Debug")
+                                fg = Snacks.util.color("Debug"),
                             }
                         end,
                     },
@@ -96,7 +98,7 @@ return {
                         cond = require("lazy.status").has_updates,
                         color = function()
                             return {
-                                fg = Snacks.util.color("Special")
+                                fg = Snacks.util.color("Special"),
                             }
                         end,
                     },
@@ -124,7 +126,9 @@ return {
                     IS.project_name(),
                     { "diagnostics", icons_enabled = false },
                     {
-                        function() return " " end,
+                        function()
+                            return " "
+                        end,
                         separator = "",
                         padding = 0,
                     },
