@@ -24,7 +24,12 @@ return {
                 theme = "auto",
                 globalstatus = vim.o.laststatus == 3,
                 disabled_filetypes = {
-                    statusline = { "dashboard", "alpha", "ministarter" },
+                    statusline = {
+                        "alpha",
+                        "dashboard",
+                        "ministarter",
+                        "snacks_dashboard",
+                    },
                 },
             },
             sections = {
@@ -32,7 +37,10 @@ return {
                 lualine_b = { "branch" },
                 lualine_c = {
                     IS.project_name(),
-                    { "diagnostics", icons_enabled = false },
+                    {
+                        "diagnostics",
+                        icons_enabled = false,
+                    },
                     {
                         function() return " " end,
                         separator = "",
@@ -50,23 +58,21 @@ return {
                     },
                 },
                 lualine_x = {
+                    Snacks.profiler.status(),
                     {
                         function()
                             return require("noice").api.status.mode.get()
                         end,
                         cond = function()
-                            if not package.loaded["noice"] then
-                                return false
-                            end
-                            local noice = require("noice")
-                            if not noice.api.status.mode.has() then
-                                return false
-                            end
-                            local status = noice.api.status.mode.get()
-                            return status:find("-- ") ~= 1
+                            return (
+                                package.loaded["noice"] and
+                                require("noice").api.status.mode.has()
+                            )
                         end,
                         color = function()
-                            return LazyVim.ui.fg("Constant")
+                            return {
+                                fg = Snacks.util.color("Statement")
+                            }
                         end,
                     },
                     {
@@ -80,14 +86,18 @@ return {
                             )
                         end,
                         color = function()
-                            LazyVim.ui.fg("Debug")
+                            return {
+                                fg = Snacks.util.color("Debug")
+                            }
                         end,
                     },
                     {
                         require("lazy.status").updates,
                         cond = require("lazy.status").has_updates,
                         color = function()
-                            return LazyVim.ui.fg("Special")
+                            return {
+                                fg = Snacks.util.color("Special")
+                            }
                         end,
                     },
                     {

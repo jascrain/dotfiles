@@ -1,7 +1,5 @@
 local M = {}
 
-_G.IS = M
-
 function M.pretty_path()
     local opts = {
         unnamed = "[No Name]",
@@ -30,20 +28,28 @@ function M.pretty_path()
         local cwd = vim.uv.cwd()
         local homedir = vim.uv.os_homedir()
         if
-            root and #root > 1 and path:find(root, 1, true) == 1
-            and not (homedir and root:find(homedir, 1, true) ~= 1
-                and path:find(homedir, 1, true) == 1)
+            root
+            and #root > 1
+            and path:find(root, 1, true) == 1
+            and not (
+                homedir
+                and root:find(homedir, 1, true) ~= 1
+                and path:find(homedir, 1, true) == 1
+            )
         then
             path = path:sub(#root + 2)
         elseif
-            cwd and #cwd > 1 and path:find(cwd, 1, true) == 1
-            and not (homedir and cwd:find(homedir, 1, true) ~= 1
-                and path:find(homedir, 1, true) == 1)
+            cwd
+            and #cwd > 1
+            and path:find(cwd, 1, true) == 1
+            and not (
+                homedir
+                and cwd:find(homedir, 1, true) ~= 1
+                and path:find(homedir, 1, true) == 1
+            )
         then
             path = path:sub(#cwd + 2)
-        elseif
-            homedir and path:find(homedir, 1, true) == 1
-        then
+        elseif homedir and path:find(homedir, 1, true) == 1 then
             path = vim.fs.joinpath("~", path:sub(#homedir + 2))
         end
 
@@ -70,7 +76,8 @@ function M.pretty_path()
                 parts_trunc,
                 parts,
                 #parts - opts.length + 2,
-                #parts)
+                #parts
+            )
             parts = parts_trunc
         end
 
@@ -110,17 +117,17 @@ function M.project_name()
 
     return {
         function()
-            local name = get()
-            if name and #name > 0 then
-                return "󱉭 " .. name
-            end
+             local name = get()
+             if name and #name > 0 then
+                 return "󱉭 " .. name
+             end
             return ""
         end,
         cond = function()
             local name = get()
             return name and #name > 0
         end,
-        color = LazyVim.ui.fg("Special"),
+        color = { fg = Snacks.util.color("Special") },
     }
 end
 

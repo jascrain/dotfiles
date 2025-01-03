@@ -1,4 +1,4 @@
-local function on_lsp_attach(client, _)
+local function setup_keymaps(client, _)
     local keys = {
         {
             "<leader>cl",
@@ -63,7 +63,7 @@ local function on_lsp_attach(client, _)
         },
         {
             "<leader>cR",
-            LazyVim.lsp.rename_file,
+            Snacks.rename.rename_file,
             desc = "Rename File",
         },
         {
@@ -79,45 +79,45 @@ local function on_lsp_attach(client, _)
         {
             "]]",
             function()
-                LazyVim.lsp.words.jump(vim.v.count1)
+                Snacks.words.jump(vim.v.count1)
             end,
             desc = "Next Reference",
             has = "textDocument/documentHighlight",
             cond = function()
-                return LazyVim.lsp.words.enabled
+                return Snacks.words.is_enabled()
             end,
         },
         {
             "[[",
             function()
-                LazyVim.lsp.words.jump(-vim.v.count1)
+                Snacks.words.jump(-vim.v.count1)
             end,
             desc = "Prev Reference",
             has = "textDocument/documentHighlight",
             cond = function()
-                return LazyVim.lsp.words.enabled
+                return Snacks.words.is_enabled()
             end,
         },
         {
             "<a-n>",
             function()
-                LazyVim.lsp.words.jump(vim.v.count1, true)
+                Snacks.words.jump(vim.v.count1, true)
             end,
             desc = "Next Reference",
             has = "textDocument/documentHighlight",
             cond = function()
-                return LazyVim.lsp.words.enabled
+                return Snacks.words.is_enabled()
             end
         },
         {
             "<a-p>",
             function()
-                LazyVim.lsp.words.jump(-vim.v.count1, true)
+                Snacks.words.jump(-vim.v.count1, true)
             end,
             desc = "Prev Reference",
             has = "textDocument/documentHighlight",
             cond = function()
-                return LazyVim.lsp.words.enabled
+                return Snacks.words.is_enabled()
             end,
         },
     }
@@ -163,19 +163,19 @@ return {
             },
         },
         config = function(_, opts)
-            LazyVim.lsp.on_attach(on_lsp_attach)
+            LazyVim.format.register(LazyVim.lsp.formatter())
+            LazyVim.lsp.on_attach(setup_keymaps)
             LazyVim.lsp.setup()
-            LazyVim.lsp.on_dynamic_capability(on_lsp_attach)
-            LazyVim.lsp.words.setup(opts.document_highlight)
+            LazyVim.lsp.on_dynamic_capability(setup_keymaps)
 
             if vim.tbl_get(opts, "inlay_hints", "enabled") then
                 LazyVim.lsp.on_supports_method("textDocument/inlayHint", function(_, buffer)
                     if
                         vim.api.nvim_buf_is_valid(buffer)
                         and vim.bo[buffer].buftype == ""
-                            and not vim.tbl_contains(
-                                opts.inlay_hints.exclude or {},
-                                vim.bo[buffer].filetype)
+                        and not vim.tbl_contains(
+                            opts.inlay_hints.exclude or {},
+                            vim.bo[buffer].filetype)
                     then
                         vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
                     end
@@ -202,12 +202,12 @@ return {
             end
 
             local servers = (opts and opts.servers) or {}
-            local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+            local has_blink, blink = pcall(require, "blink.cmp")
             local capabilities = vim.tbl_deep_extend(
                 "force",
                 {},
                 vim.lsp.protocol.make_client_capabilities(),
-                has_cmp and cmp_nvim_lsp.default_capabilities() or {},
+                has_blink and blink.get_lsp_capabilities() or {},
                 opts.capabilities or {}
             )
 
@@ -247,10 +247,7 @@ return {
         },
         build = ":MasonUpdate",
         opts = {
-            ensure_installed = {
-                -- "stylua",
-                -- "shfmt",
-            },
+            ensure_installed = {},
         },
         config = function(_, opts)
             require("mason").setup(opts)
@@ -286,22 +283,13 @@ return {
         "folke/lazydev.nvim",
         ft = "lua",
         cmd = "LazyDev",
-        cond = vim.fn.has("nvim-0.10.0") == 1,
         opts = {
             library = {
-                { path = "luvit-meta/library", words = { "vim%.uv" } },
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                { path = "LazyVim",            words = { "LazyVim" } },
+                { path = "snacks.nvim",        words = { "Snacks" } },
                 { path = "lazy.nvim" },
             },
         },
     },
-    {
-        -- Manage libuv types with lazy. Plugin will never be loaded.
-        "Bilal2453/luvit-meta",
-        lazy = true,
-    },
-    -- {
-    --     "folke/trouble.nvim",
-    --     cmd = "Trouble",
-    --     config = true,
-    -- },
 }

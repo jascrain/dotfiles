@@ -30,6 +30,9 @@ return {
             { "<c-space>", desc = "Increment Selection" },
             { "<bs>", desc = "Decrement Selection", mode = "x" },
         },
+    opts_extend = { "ensure_installed" },
+        ---@type TSConfig
+        ---@diagnostic disable-next-line: missing-fields
         opts = {
             highlight = { enable = true },
             indent = { enable = true },
@@ -112,13 +115,16 @@ return {
                 },
             },
         },
+        ---@param opts TSConfig
         config = function(_, opts)
             require("nvim-treesitter.configs").setup(opts)
-        end
+        end,
     },
+
     {
         "nvim-treesitter/nvim-treesitter-textobjects",
         event = "VeryLazy",
+    enabled = true,
         config = function()
             -- If treesitter is already loaded, we need to run config again for
             -- textobjects

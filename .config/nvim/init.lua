@@ -1,47 +1,44 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable",
-        lazypath,
-    })
-end
-vim.opt.rtp:prepend(lazypath)
-require("lazyvim").setup()
-require("lazy").setup("plugins")
-require("is")
+require("lazy_setup").setup()
 
-vim.o.breakindent = true
-vim.o.expandtab = true      -- use spaces instead of tabs
-vim.o.foldlevel = 99
-vim.o.ignorecase = true
-vim.o.list = true           -- show some invisible characters (tabs...
-vim.o.number = true         -- show line numbers
-vim.o.pumblend = 10         -- popup blend
-vim.o.pumheight = 10        -- maximum number of entries in a popup
-vim.o.shiftwidth = 4
-vim.o.smartcase = true      -- don't ignore case with capitals
-vim.o.softtabstop = 4
-vim.o.splitbelow = true     -- put new windows below current
-vim.o.splitright = true     -- put new windows right of current
-vim.o.termguicolors = true  -- true color support
-vim.o.undofile = true       -- persistant undo
-vim.o.updatetime = 200      -- save swap file and trigger CursorHold
-vim.o.virtualedit = "block"
+local opt = vim.opt
+
+opt.breakindent = true
+opt.expandtab = true      -- use spaces instead of tabs
+opt.foldlevel = 99
+opt.formatexpr = "v:lua.require'lazyvim.util'.format.formatexpr()"
+opt.formatoptions = "jcroqlnt"
+opt.ignorecase = true
+opt.linebreak = true      -- Wrap lines at convenient points
+opt.list = true           -- show some invisible characters (tabs...
+opt.number = true         -- show line numbers
+opt.pumblend = 10         -- popup blend
+opt.pumheight = 10        -- maximum number of entries in a popup
+opt.shiftwidth = 4
+opt.signcolumn = "yes"    -- Always show the signcolumn, otherwise it would shift the text each time
+opt.smartcase = true      -- don't ignore case with capitals
+opt.smartindent = true    -- Insert indents automatically
+opt.softtabstop = 4
+opt.splitbelow = true     -- put new windows below current
+opt.splitright = true     -- put new windows right of current
+opt.termguicolors = true  -- true color support
+opt.undofile = true       -- persistant undo
+opt.undolevels = 10000
+opt.updatetime = 200      -- save swap file and trigger CursorHold
+opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
 
 if vim.fn.has("nvim-0.10") == 1 then
-    vim.opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
-    vim.opt.foldmethod = "expr"
-    vim.opt.foldtext = ""
+    opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
+    opt.foldmethod = "expr"
+    opt.foldtext = ""
 end
 
 vim.g.markdown_recommended_style = 0
+
+require("lazy").setup("plugins")
+
 vim.cmd.colorscheme("gruvbox")
 
 local function diagnostic_icon(diagnostic)

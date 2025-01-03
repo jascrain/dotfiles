@@ -1,7 +1,6 @@
 return {
     {
         "nvim-neo-tree/neo-tree.nvim",
-        branch = "v3.x",
         cmd = "Neotree",
         keys = {
             {
@@ -104,25 +103,7 @@ return {
         },
         config = function(_, opts)
             local function on_move(data)
-                local changes = {
-                    files = {
-                        oldUri = vim.uri_from_fname(data.source),
-                        newUri = vim.uri_from_fname(data.destination),
-                    },
-                }
-                local clients = vim.lsp.get_clients()
-                for _, client in ipairs(clients) do
-                    if client.supports_method("workspace/willRenameFiles") then
-                        local resp = client.request_sync(
-                            "workspace/willRenameFiles",
-                            changes,
-                            1000,
-                            0)
-                        if resp and resp.result ~= nil then
-                            vim.lsp.util.apply_workspace_edit(resp.result, client.offset_encoding)
-                        end
-                    end
-                end
+                Snacks.rename.on_rename_file(data.source, data.destination)
             end
 
             local events = require("neo-tree.events")
