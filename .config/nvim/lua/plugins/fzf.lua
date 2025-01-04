@@ -3,7 +3,7 @@ local function wrap(command, opts)
     return function()
         opts = vim.deepcopy(opts)
         if not opts.cwd and opts.root ~= false then
-            opts.cwd = IS.root()
+            opts.cwd = IS.root() or vim.uv.cwd()
         end
         require("fzf-lua")[command](opts)
     end
