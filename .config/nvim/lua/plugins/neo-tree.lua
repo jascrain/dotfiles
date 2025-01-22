@@ -8,7 +8,7 @@ return {
                 function()
                     require("neo-tree.command").execute({
                         toggle = true,
-                        dir = #IS.root() > 0 and IS.root() or vim.uv.cwd(),
+                        dir = IS.root() or vim.uv.cwd(),
                     })
                 end,
                 desc = "Explorer NeoTree (Root Dir)",

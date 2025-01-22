@@ -43,26 +43,39 @@ return {
             keymap = {
                 ["<C-e>"] = { "hide", "fallback" },
                 ["<C-y>"] = { "select_and_accept", "fallback" },
-                ["<C-p>"] = { "show", "select_prev" },
-                ["<C-n>"] = { "show", "select_next" },
-                ["<Tab>"] = {
-                    "show",
-                    function(cmp)
-                        if cmp.snippet_active() then
-                            return cmp.accept()
-                        else
-                            return cmp.select_and_accept()
-                        end
-                    end,
-                    "snippet_forward",
-                    "fallback",
-                },
+                ["<C-p>"] = { "show", "select_prev", "fallback" },
+                ["<C-n>"] = { "show", "select_next", "fallback" },
                 cmdline = {
                     ["<C-p>"] = { "select_prev", "fallback" },
                     ["<C-n>"] = { "select_next", "fallback" },
+                    ["<Tab>"] = {
+                        "show",
+                        function(cmp)
+                            if cmp.snippet_active() then
+                                return cmp.accept()
+                            else
+                                return cmp.select_and_accept()
+                            end
+                        end,
+                        "snippet_forward",
+                        "fallback",
+                    },
                 },
             },
         },
+    },
+
+    -- add icons
+    {
+        "saghen/blink.cmp",
+        opts = function(_, opts)
+            opts.appearance = opts.appearance or {}
+            opts.appearance.kind_icons = vim.tbl_extend(
+                "force",
+                opts.appearance.kind_icons or {},
+                LazyVim.config.icons.kinds
+            )
+        end,
     },
 
     -- lazydev

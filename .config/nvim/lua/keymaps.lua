@@ -37,6 +37,10 @@ vim.keymap.set({ "n", "v" }, "<leader>cf", function()
     LazyVim.format({ force = true })
 end, { desc = "Format" })
 
+vim.keymap.set("n", "<leader>gb", function()
+    Snacks.git.blame_line()
+end, { desc = "Git Blame Line" })
+
 -- windows
 Snacks.toggle.zoom():map("<leader>wm"):map("<leader>uZ")
 Snacks.toggle.zen():map("<leader>uz")

@@ -142,6 +142,7 @@ return {
             "mason.nvim",
             "mason-lspconfig.nvim",
         },
+        ---@class PluginLspOpts
         opts = {
             inlay_hints = {
                 enabled = false,
@@ -158,12 +159,15 @@ return {
             servers = {},
             setup = {},
         },
+        ---@param opts PluginLspOpts
         config = function(_, opts)
+            -- setup autoformat
             LazyVim.format.register(LazyVim.lsp.formatter())
             LazyVim.lsp.on_attach(setup_keymaps)
             LazyVim.lsp.setup()
             LazyVim.lsp.on_dynamic_capability(setup_keymaps)
 
+            -- inlay hints
             if vim.tbl_get(opts, "inlay_hints", "enabled") then
                 LazyVim.lsp.on_supports_method(
                     "textDocument/inlayHint",
@@ -182,6 +186,7 @@ return {
                 )
             end
 
+            -- code lens
             if
                 vim.tbl_get(opts, "codelens", "enabled")
                 and vim.lsp.codelens
@@ -233,9 +238,45 @@ return {
                 require("lspconfig")[server].setup(server_opts)
             end
 
+            -- get all the servers that are available through mason-lspconfig
             local have_mason, mlsp = pcall(require, "mason-lspconfig")
+            local all_mslp_servers = {}
             if have_mason then
-                mlsp.setup({ handlers = { setup } })
+                all_mslp_servers = vim.tbl_keys(
+                    require("mason-lspconfig.mappings.server").lspconfig_to_package
+                )
+            end
+
+            local ensure_installed = {} ---@type string[]
+            for server, server_opts in pairs(servers) do
+                if server_opts then
+                    server_opts = server_opts == true and {} or server_opts
+                    if server_opts.enabled ~= false then
+                        -- run manual setup if mason=false or if this is a
+                        -- server that cannot be installed with mason-lspconfig
+                        if
+                            server_opts.mason == false
+                            or not vim.tbl_contains(all_mslp_servers, server)
+                        then
+                            setup(server)
+                        else
+                            ensure_installed[#ensure_installed + 1] = server
+                        end
+                    end
+                end
+            end
+
+            if have_mason then
+                mlsp.setup({
+                    ensure_installed = vim.tbl_deep_extend(
+                        "force",
+                        ensure_installed,
+                        LazyVim.opts("mason-lspconfig.nvim").ensure_installed
+                            or {}
+                    ),
+                    automatic_installation = false,
+                    handlers = { setup },
+                })
             end
         end,
     },
@@ -246,9 +287,11 @@ return {
             { "<leader>cm", "<Cmd>Mason<CR>", desc = "Mason" },
         },
         build = ":MasonUpdate",
+        opts_extend = { "ensure_installed" },
         opts = {
             ensure_installed = {},
         },
+        ---@param opts MasonSettings | {ensure_installed: string[]}
         config = function(_, opts)
             require("mason").setup(opts)
             local mr = require("mason-registry")
@@ -278,6 +321,7 @@ return {
         "williamboman/mason-lspconfig.nvim",
         dependencies = "mason.nvim",
         lazy = true,
+        config = function() end,
     },
     {
         "folke/lazydev.nvim",

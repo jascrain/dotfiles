@@ -24,8 +24,9 @@ return {
         "ibhagwan/fzf-lua",
         cmd = "FzfLua",
         opts = function(_, _)
-            local config = require("fzf-lua.config")
-            local actions = require("fzf-lua.actions")
+            local fzf = require("fzf-lua")
+            local config = fzf.config
+            local actions = fzf.actions
 
             -- Quickfix
             config.defaults.keymap.fzf["ctrl-q"] = "select-all+accept"
@@ -67,6 +68,7 @@ return {
                 defaults = {
                     formatter = "path.dirname_first",
                 },
+                -- Custom LazyVim option to configure vim.ui.select
                 ui_select = function(fzf_opts, items)
                     return vim.tbl_deep_extend("force", fzf_opts, {
                         prompt = " ",

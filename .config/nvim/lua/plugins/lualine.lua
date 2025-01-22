@@ -1,6 +1,5 @@
 return {
     "nvim-lualine/lualine.nvim",
-    dependencies = "nvim-web-devicons",
     event = "VeryLazy",
     init = function()
         vim.g.lualine_laststatus = vim.o.laststatus
@@ -55,16 +54,14 @@ return {
                         padding = 0,
                     },
                     {
-                        IS.pretty_path(),
+                        IS.pretty_path,
                         padding = { left = 0, right = 1 },
                     },
                 },
                 lualine_x = {
                     Snacks.profiler.status(),
                     {
-                        function()
-                            return require("noice").api.status.mode.get()
-                        end,
+                        require("noice").api.status.mode.get,
                         cond = function()
                             return (
                                 package.loaded["noice"]
@@ -139,7 +136,7 @@ return {
                         padding = 0,
                     },
                     {
-                        IS.pretty_path(),
+                        IS.pretty_path,
                         padding = { left = 0, right = 1 },
                     },
                 },
