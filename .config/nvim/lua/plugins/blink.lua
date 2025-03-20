@@ -8,7 +8,7 @@ return {
             "sources.default",
         },
         dependencies = "rafamadriz/friendly-snippets",
-        event = { "InsertEnter", "CmdlineEnter" },
+        event = "InsertEnter",
         opts = {
             appearance = {
                 -- Sets the fallback highlight groups to nvim-cmp's highlight groups
@@ -40,27 +40,14 @@ return {
                     "buffer",
                 },
             },
+            cmdline = {
+                enabled = false,
+            },
             keymap = {
-                ["<C-e>"] = { "hide", "fallback" },
+                preset = "enter",
                 ["<C-y>"] = { "select_and_accept", "fallback" },
                 ["<C-p>"] = { "show", "select_prev", "fallback" },
                 ["<C-n>"] = { "show", "select_next", "fallback" },
-                cmdline = {
-                    ["<C-p>"] = { "select_prev", "fallback" },
-                    ["<C-n>"] = { "select_next", "fallback" },
-                    ["<Tab>"] = {
-                        "show",
-                        function(cmp)
-                            if cmp.snippet_active() then
-                                return cmp.accept()
-                            else
-                                return cmp.select_and_accept()
-                            end
-                        end,
-                        "snippet_forward",
-                        "fallback",
-                    },
-                },
             },
         },
     },
