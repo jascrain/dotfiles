@@ -11,6 +11,7 @@ return {
             input = { enabled = true },
             notifier = { enabled = true },
             scope = { enabled = true },
+            scroll = { enabled = false },
             statuscolumn = { enabled = false },
             words = { enabled = true },
         },
@@ -18,7 +19,11 @@ return {
             {
                 "<leader>n",
                 function()
-                    Snacks.notifier.show_history()
+                    if Snacks.config.picker and Snacks.config.picker.enabled then
+                        Snacks.picker.notifications()
+                    else
+                        Snacks.notifier.show_history()
+                    end
                 end,
                 desc = "Notification History",
             },
@@ -42,6 +47,13 @@ return {
                     Snacks.scratch.select()
                 end,
                 desc = "Select Scratch Buffer",
+            },
+            {
+                "<leader>dps",
+                function()
+                    Snacks.profiler.scratch()
+                end,
+                desc = "Profiler Scratch Buffer",
             },
         },
         config = function(_, opts)

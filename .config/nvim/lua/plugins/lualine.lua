@@ -70,7 +70,7 @@ return {
                         end,
                         color = function()
                             return {
-                                fg = Snacks.util.color("Statement"),
+                                fg = Snacks.util.color("Constant"),
                             }
                         end,
                     },

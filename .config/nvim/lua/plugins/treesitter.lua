@@ -181,20 +181,20 @@ return {
                     d = { "%f[%d]%d+" },
                     -- word with case
                     e = {
-                            {
-                                "%u[%l%d]+%f[^%l%d]",
-                                "%f[%S][%l%d]+%f[^%l%d]",
-                                "%f[%P][%l%d]+%f[^%l%d]",
-                                "^[%l%d]+%f[^%l%d]",
-                            },
-                            "^().*()$",
+                        {
+                            "%u[%l%d]+%f[^%l%d]",
+                            "%f[%S][%l%d]+%f[^%l%d]",
+                            "%f[%P][%l%d]+%f[^%l%d]",
+                            "^[%l%d]+%f[^%l%d]",
                         },
+                        "^().*()$",
+                    },
                     -- buffer
                     g = LazyVim.mini.ai_buffer,
                     -- u for usage
                     u = ai.gen_spec.function_call(),
                     U = ai.gen_spec.function_call({
-                        name_pattern = "[%w_]"
+                        name_pattern = "[%w_]",
                     }),
                 },
             }
@@ -202,9 +202,9 @@ return {
         config = function(_, opts)
             require("mini.ai").setup(opts)
             LazyVim.on_load("which-key.nvim", function()
-              vim.schedule(function()
-                LazyVim.mini.ai_whichkey(opts)
-              end)
+                vim.schedule(function()
+                    LazyVim.mini.ai_whichkey(opts)
+                end)
             end)
         end,
     },

@@ -1,13 +1,19 @@
 return {
     {
-        "gruvbox-community/gruvbox",
+        "ellisonleao/gruvbox.nvim",
+        priority = 1000,
         lazy = false,
-        config = function()
-            vim.g.gruvbox_italic = 1
-            vim.g.gruvbox_contrast_dark = "hard"
-            vim.g.gruvbox_colors = { dark0_hard = { "#000000", 0 } }
-            vim.g.gruvbox_sign_column = "none"
-        end,
+        opts = {
+            contrast = "hard",
+            transparent_mode = true,
+            italic = { strings = false },
+            palette_overrides = {
+                dark0_hard = "#000000",
+            },
+            overrides = {
+                StatusLine = { reverse = false },
+            },
+        },
     },
     {
         "navarasu/onedark.nvim",

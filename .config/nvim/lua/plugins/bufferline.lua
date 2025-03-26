@@ -55,6 +55,9 @@ return {
                         highlight = "Directory",
                         text_align = "left",
                     },
+                    {
+                        filetype = "snacks_layout_box",
+                    },
                 },
                 ---@param opts bufferline.IconFetcherOpts
                 get_element_icon = function(opts)

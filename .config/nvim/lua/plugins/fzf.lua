@@ -1,11 +1,16 @@
 local function wrap(command, opts)
-    opts = opts or {}
     return function()
-        opts = vim.deepcopy(opts)
-        if not opts.cwd and opts.root ~= false then
-            opts.cwd = #IS.root() > 0 and IS.root() or vim.uv.cwd()
+        local lopts = opts or {}
+        if not lopts.cwd and lopts.root ~= false then
+            lopts = vim.deepcopy(lopts)
+            local root = IS.root()
+            if root and #root > 0 then
+                lopts.cwd = root
+            else
+                lopts.cwd = vim.uv.cwd()
+            end
         end
-        require("fzf-lua")[command](opts)
+        require("fzf-lua")[command](lopts)
     end
 end
 
