@@ -319,10 +319,11 @@ return {
         end,
     },
     {
-        "williamboman/mason-lspconfig.nvim",
+        "mason-org/mason-lspconfig.nvim",
         dependencies = "mason.nvim",
         lazy = true,
         config = function() end,
+        version = "^1.0.0",
     },
     {
         "folke/lazydev.nvim",

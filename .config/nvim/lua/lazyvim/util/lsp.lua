@@ -118,6 +118,7 @@ function M.on_supports_method(method, fn)
   })
 end
 
+---@param opts? LazyFormatter| {filter?: (string|lsp.Client.filter)}
 function M.formatter(opts)
   opts = opts or {}
   local filter = opts.filter or {}
