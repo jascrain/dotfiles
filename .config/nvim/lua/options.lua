@@ -1,5 +1,4 @@
 local opt = vim.opt
-
 opt.breakindent = true
 opt.expandtab = true      -- use spaces instead of tabs
 opt.foldlevel = 99
@@ -24,6 +23,7 @@ opt.undofile = true       -- persistant undo
 opt.undolevels = 10000
 opt.updatetime = 200      -- save swap file and trigger CursorHold
 opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
+opt.diffopt:append("iwhiteall")
 
 if vim.fn.has("nvim-0.10") == 1 then
     opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"

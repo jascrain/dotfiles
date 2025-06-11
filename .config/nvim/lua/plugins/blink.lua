@@ -9,6 +9,8 @@ return {
         },
         dependencies = "rafamadriz/friendly-snippets",
         event = "InsertEnter",
+        ---@module 'blink.cmp'
+        ---@type blink.cmp.Config
         opts = {
             appearance = {
                 -- sets the fallback highlight groups to nvim-cmp's highlight groups
