@@ -14,6 +14,13 @@ local defaults = {
     ft = {
       octo = "",
     },
+    dap = {
+      Stopped             = { "󰁕", "DiagnosticWarn", "DapStoppedLine" },
+      Breakpoint          = "",
+      BreakpointCondition = "",
+      BreakpointRejected  = { "", "DiagnosticError" },
+      LogPoint            = ".>",
+    },
     diagnostics = {
       Error = "",
       Warn  = "",
@@ -118,9 +125,6 @@ function M.setup(opts)
     group = group,
     pattern = "VeryLazy",
     callback = function()
-
-      LazyVim.format.setup()
-
       vim.api.nvim_create_user_command("LazyHealth", function()
         vim.cmd([[Lazy! load all]])
         vim.cmd([[checkhealth]])

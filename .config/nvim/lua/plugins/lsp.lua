@@ -11,13 +11,13 @@ local function setup_keymaps(client, _)
             has = "textDocument/definition",
         },
         {
-            "gr",
+            "grr",
             "<cmd>FzfLua lsp_references jump1=true ignore_current_line=true<cr>",
             desc = "References",
             nowait = true,
         },
         {
-            "gI",
+            "gri",
             "<cmd>FzfLua lsp_implementations jump1=true ignore_current_line=true<cr>",
             desc = "Goto Implementation",
         },
@@ -40,16 +40,9 @@ local function setup_keymaps(client, _)
             desc = "Signature Help",
         },
         {
-            "<c-k>",
-            vim.lsp.buf.signature_help,
-            desc = "Signature Help",
-            mode = "i",
-        },
-        {
-            "<leader>ca",
-            vim.lsp.buf.code_action,
-            desc = "Code Action",
-            mode = { "n", "v" },
+            "gO",
+            "<cmd>FzfLua lsp_document_symbols<cr>",
+            desc = "Document Symbol",
         },
         {
             "<leader>cc",
@@ -66,11 +59,6 @@ local function setup_keymaps(client, _)
             "<leader>cR",
             Snacks.rename.rename_file,
             desc = "Rename File",
-        },
-        {
-            "<leader>cr",
-            vim.lsp.buf.rename,
-            desc = "Rename",
         },
         {
             "<leader>cA",
@@ -126,7 +114,7 @@ local function setup_keymaps(client, _)
     for _, k in pairs(keys) do
         if
             (not k.cond or k.cond())
-            and (not k.has or client.supports_method(k.has))
+            and (not k.has or client:supports_method(k.has))
         then
             vim.keymap.set(k.mode or "n", k[1], k[2], {
                 desc = k.desc,
@@ -156,14 +144,11 @@ return {
                 enabled = true,
             },
             capabilities = {},
-            format = {},
             servers = {},
             setup = {},
         },
         ---@param opts PluginLspOpts
         config = function(_, opts)
-            -- setup autoformat
-            LazyVim.format.register(LazyVim.lsp.formatter())
             LazyVim.lsp.on_attach(setup_keymaps)
             LazyVim.lsp.setup()
             LazyVim.lsp.on_dynamic_capability(setup_keymaps)

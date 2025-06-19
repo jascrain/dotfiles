@@ -32,11 +32,6 @@ end, { expr = true, desc = "Escape and Clear hlsearch" })
 
 vim.keymap.set("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
--- formatting
-vim.keymap.set({ "n", "v" }, "<leader>cf", function()
-    LazyVim.format({ force = true })
-end, { desc = "Format" })
-
 vim.keymap.set("n", "<leader>gb", function()
     Snacks.git.blame_line()
 end, { desc = "Git Blame Line" })

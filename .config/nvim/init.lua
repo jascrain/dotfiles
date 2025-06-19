@@ -8,13 +8,6 @@ require("keymaps")
 
 vim.cmd.colorscheme("gruvbox")
 
-local function diagnostic_icon(diagnostic)
-    local icons = LazyVim.config.icons.diagnostics
-    local severity = vim.diagnostic.severity[diagnostic.severity]
-    local key = severity:sub(1, 1) .. severity:sub(2):lower()
-    return icons[key] or "●"
-end
-
 vim.diagnostic.config({
     severity_sort = true,
     signs = {
@@ -28,7 +21,12 @@ vim.diagnostic.config({
     underline = true,
     update_in_insert = false,
     virtual_text = {
-        prefix = vim.fn.has("nvim-0.10.0") == 1 and diagnostic_icon or "●",
+        prefix = function(diagnostic)
+            local icons = LazyVim.config.icons.diagnostics
+            local severity = vim.diagnostic.severity[diagnostic.severity]
+            local key = severity:sub(1, 1) .. severity:sub(2):lower()
+            return icons[key] or "●"
+        end,
         source = "if_many",
         spacing = 4,
     },

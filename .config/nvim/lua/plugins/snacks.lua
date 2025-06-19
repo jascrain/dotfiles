@@ -12,14 +12,16 @@ return {
             notifier = { enabled = true },
             scope = { enabled = true },
             scroll = { enabled = false },
-            statuscolumn = { enabled = false },
+            statuscolumn = { enabled = true },
             words = { enabled = true },
         },
         keys = {
             {
                 "<leader>n",
                 function()
-                    if Snacks.config.picker and Snacks.config.picker.enabled then
+                    if
+                        Snacks.config.picker and Snacks.config.picker.enabled
+                    then
                         Snacks.picker.notifications()
                     else
                         Snacks.notifier.show_history()
