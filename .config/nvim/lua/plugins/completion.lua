@@ -53,8 +53,6 @@ return {
             },
         },
     },
-
-    -- lazydev
     {
         "saghen/blink.cmp",
         opts = {
@@ -71,8 +69,6 @@ return {
             },
         },
     },
-
-    -- catppuccin support
     {
         "catppuccin",
         optional = true,
