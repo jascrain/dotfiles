@@ -51,6 +51,27 @@ return {
                 end,
                 desc = "Profiler Scratch Buffer",
             },
+            {
+                "<leader>cR",
+                function()
+                    Snacks.rename.rename_file()
+                end,
+                desc = "Rename File",
+            },
+            {
+                "<a-n>",
+                function()
+                    Snacks.words.jump(vim.v.count1, true)
+                end,
+                desc = "Next Reference",
+            },
+            {
+                "<a-p>",
+                function()
+                    Snacks.words.jump(-vim.v.count1, true)
+                end,
+                desc = "Previous Reference",
+            },
         },
         config = function(_, opts)
             local notify = vim.notify

@@ -39,3 +39,23 @@ end, { desc = "Git Blame Line" })
 -- windows
 Snacks.toggle.zoom():map("<leader>wm"):map("<leader>uZ")
 Snacks.toggle.zen():map("<leader>uz")
+
+-- lsp
+vim.keymap.set(
+    { "n", "v" },
+    "<leader>cc",
+    vim.lsp.codelens.run,
+    { desc = "Run Codelens" }
+)
+vim.keymap.set(
+    { "n", "v" },
+    "<leader>cC",
+    vim.lsp.codelens.refresh,
+    { desc = "Refresh Codelens" }
+)
+vim.keymap.set(
+    "n",
+    "gK",
+    vim.lsp.buf.signature_help,
+    { desc = "Signature Help" }
+)

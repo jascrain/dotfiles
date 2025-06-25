@@ -408,6 +408,32 @@ return {
                 ),
                 desc = "Goto Symbol (Workspace)",
             },
+            -- lsp
+            {
+                "gO",
+                function()
+                    require("fzf-lua").lsp_document_symbols()
+                end,
+            },
+            {
+                "gri",
+                function()
+                    require("fzf-lua").lsp_implementations()
+                end,
+            },
+            {
+                "grr",
+                function()
+                    require("fzf-lua").lsp_references()
+                end,
+            },
+            {
+                "gy",
+                function()
+                    require("fzf-lua").lsp_typedefs()
+                end,
+                desc = "Type Definition",
+            }
         },
     },
 }
