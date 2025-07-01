@@ -1,18 +1,10 @@
 local function setup_keymaps()
-    vim.keymap.set(
-        "n",
-        "gd",
-        function()
-            require("fzf-lua").lsp_definitions()
-        end
-    )
-    vim.keymap.set(
-        "n",
-        "gD",
-        function()
-            require("fzf-lua").lsp_declarations()
-        end
-    )
+    vim.keymap.set("n", "gd", function()
+        require("fzf-lua").lsp_definitions()
+    end)
+    vim.keymap.set("n", "gD", function()
+        require("fzf-lua").lsp_declarations()
+    end)
 end
 
 return {
@@ -32,12 +24,23 @@ return {
                 desc = "Lsp Info",
             },
         },
-        opts = {},
         config = function()
             vim.api.nvim_create_autocmd(
                 "LspAttach",
                 { callback = setup_keymaps }
             )
+            vim.lsp.config("clangd", {
+                root_markers = {
+                    {
+                        ".git",
+                        "build.ninja",
+                        "compile_commands.json",
+                        "compile_flags.txt",
+                        "configure.ac",
+                        "configure.in",
+                    },
+                },
+            })
         end,
     },
     {

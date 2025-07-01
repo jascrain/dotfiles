@@ -141,17 +141,16 @@ function M.root()
         return nil
     end
 
-    for _, client in pairs(vim.lsp.get_clients({ bufnr = buf })) do
-        if client.root_dir then
-            path = client.root_dir
-            break
-        end
-    end
-
     if not path then
         local bname = vim.api.nvim_buf_get_name(buf)
         path = vim.fs.root(bname, {
             ".git",
+            "build.ninja",
+            "compile_commands.json",
+            "compile_flags.txt",
+            "configure",
+            "configure.ac",
+            "configure.in",
             "lua",
         })
     end
