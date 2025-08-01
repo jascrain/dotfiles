@@ -134,7 +134,7 @@ function M.root()
     local buf = vim.api.nvim_get_current_buf()
     local path = root_cache[buf]
     if path then
-        return #path and path
+        return (#path > 0) and path or nil
     end
 
     if #vim.bo.buftype > 0 then
@@ -152,12 +152,13 @@ function M.root()
             "configure.ac",
             "configure.in",
             "lua",
+            "pyproject.toml",
         })
     end
 
     path = path or ""
     root_cache[buf] = path
-    return #path and path
+    return (#path > 0) and path or nil
 end
 
 return M

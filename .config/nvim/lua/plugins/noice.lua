@@ -1,7 +1,7 @@
 return {
     {
         "folke/noice.nvim",
-        dependencies = "nui.nvim",
+        dependencies = "MunifTanjim/nui.nvim",
         event = "VeryLazy",
         opts = {
             lsp = {
@@ -109,9 +109,5 @@ return {
             end
             require("noice").setup(opts)
         end,
-    },
-    {
-        "MunifTanjim/nui.nvim",
-        lazy = true,
     },
 }

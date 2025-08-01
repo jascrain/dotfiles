@@ -45,6 +45,13 @@ return {
                 desc = "Select Scratch Buffer",
             },
             {
+                "<leader>gb",
+                function()
+                    Snacks.git.blame_line()
+                end,
+                desc = "Git Blame Line",
+            },
+            {
                 "<leader>dps",
                 function()
                     Snacks.profiler.scratch()
@@ -82,6 +89,8 @@ return {
             if LazyVim.has("noice.nvim") then
                 vim.notify = notify
             end
+            Snacks.toggle.zoom():map("<leader>uZ")
+            Snacks.toggle.zen():map("<leader>uz")
         end,
     },
 }

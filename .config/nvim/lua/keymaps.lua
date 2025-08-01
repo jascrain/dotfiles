@@ -32,14 +32,6 @@ end, { expr = true, desc = "Escape and Clear hlsearch" })
 
 vim.keymap.set("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
-vim.keymap.set("n", "<leader>gb", function()
-    Snacks.git.blame_line()
-end, { desc = "Git Blame Line" })
-
--- windows
-Snacks.toggle.zoom():map("<leader>wm"):map("<leader>uZ")
-Snacks.toggle.zen():map("<leader>uz")
-
 -- lsp
 vim.keymap.set(
     { "n", "v" },

@@ -1,10 +1,33 @@
-local function setup_keymaps()
+local function setup_keymaps(ev)
     vim.keymap.set("n", "gd", function()
         require("fzf-lua").lsp_definitions()
     end)
     vim.keymap.set("n", "gD", function()
         require("fzf-lua").lsp_declarations()
     end)
+
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client.name == "pyright" then
+        -- filter out pyright's not accessed messages
+        vim.lsp.handlers["textDocument/publishDiagnostics"] = function(
+            _,
+            params,
+            ctx
+        )
+            local diagnostics = {}
+            for _, diag in ipairs(params.diagnostics) do
+                if
+                    diag.severity ~= 4
+                    or diag.code ~= nil
+                    or not string.match(diag.message, '"_.+" is not accessed')
+                then
+                    diagnostics[#diagnostics + 1] = diag
+                end
+            end
+            params.diagnostics = diagnostics
+            vim.lsp.diagnostic.on_publish_diagnostics(_, params, ctx)
+        end
+    end
 end
 
 return {
@@ -38,6 +61,15 @@ return {
                         "compile_flags.txt",
                         "configure.ac",
                         "configure.in",
+                    },
+                },
+            })
+            vim.lsp.config("lua_ls", {
+                settings = {
+                    Lua = {
+                        diagnostics = {
+                            disable = { "missing-fields" },
+                        },
                     },
                 },
             })
